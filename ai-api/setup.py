@@ -3,13 +3,20 @@ import argparse
 import pandas as pd
 from sentence_transformers import SentenceTransformer, CrossEncoder
 from config.chroma_config import get_chroma_collection
+from dotenv import load_dotenv
+import subprocess
+
+load_dotenv()
 
 # ==========================================
 # CONFIG
 # ==========================================
-PARQUET_PATH = "./setup/seeder_vektor_hoaks.parquet"
-MODEL_NAME = "paraphrase-multilingual-MiniLM-L12-v2"
-MODEL_DIR = "./models/sentence-transformer"
+PARQUET_PATH = os.getenv("PARQUET_PATH")
+MODEL_NAME = os.getenv("MODEL_NAME")
+MODEL_DIR = os.getenv("MODEL_DIR")
+NLI_MODEL_NAME = os.getenv("NLI_MODEL_NAME")
+NLI_MODEL_DIR = os.getenv("NLI_MODEL_DIR")
+
 # ==========================================
 # 1. CLEAR CHROMA
 # ==========================================
@@ -88,9 +95,6 @@ def download_model():
 # 4. nli
 # ==========================================
 
-NLI_MODEL_NAME = "joeddav/xlm-roberta-large-xnli"
-NLI_MODEL_DIR = "./models/nli"
-
 def download_nli_model():
     print("Downloading NLI model...")
 
@@ -100,6 +104,16 @@ def download_nli_model():
     model.save(NLI_MODEL_DIR)
 
     print("✅ NLI model ready.")
+    
+# ==========================================
+# playwright
+# ==========================================
+def download_playwright():
+    os.environ["PLAYWRIGHT_BROWSERS_PATH"] = "./.playwright-browsers"
+    print("🚀 Menginstall Chromium untuk Playwright...")
+    subprocess.run(["playwright", "install", "chromium"], check=True)
+    print("✅ Chromium siap digunakan.")
+    
 # ==========================================
 # MAIN
 # ==========================================
@@ -108,7 +122,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--step",
         type=str,
-        choices=["seed", "clear", "model","nli","all"],
+        choices=["seed", "clear", "model","nli" ,"playwright","all"],
         default="all",
         help="Step yang dijalankan"
     )
@@ -126,7 +140,8 @@ if __name__ == "__main__":
         download_model()
     elif args.step == "nli":
         download_nli_model()
-
+    elif args.step == "playwright":
+        download_playwright()
     elif args.step == "all":
         clear_chroma(collection)
         seed_parquet_to_chroma(collection)

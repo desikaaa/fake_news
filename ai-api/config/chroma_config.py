@@ -1,7 +1,11 @@
 import chromadb
+import os
+from dotenv import load_dotenv
 
-CHROMA_DIR = "./chroma_db"
-COLLECTION_NAME = "lensa_hoaks"
+load_dotenv()
+
+CHROMA_DIR = os.getenv("CHROMA_DIR")
+COLLECTION_NAME = os.getenv("COLLECTION_NAME")
 
 def get_chroma_collection():
     client = chromadb.PersistentClient(path=CHROMA_DIR)

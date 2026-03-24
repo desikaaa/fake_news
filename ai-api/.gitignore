@@ -1,3 +1,5 @@
 venv/
 models/
 chroma_db/
+.playwright-browsers/
+.env

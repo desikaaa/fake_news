@@ -4,3 +4,8 @@ pandas
 numpy
 sentence-transformers
 chromadb
+sentencepiece 
+tiktoken
+mysql-connector-python
+python-dotenv
+playwright

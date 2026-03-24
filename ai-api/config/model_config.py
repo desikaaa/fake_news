@@ -1,7 +1,10 @@
 from sentence_transformers import SentenceTransformer
 import os
+from dotenv import load_dotenv
 
-MODEL_DIR = "./models/sentence-transformer"
+load_dotenv()
+
+MODEL_DIR = os.getenv("MODEL_DIR")
 
 def get_model():
     if not os.path.exists(MODEL_DIR):

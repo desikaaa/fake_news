@@ -1,7 +1,10 @@
 from sentence_transformers import CrossEncoder
 import os
+from dotenv import load_dotenv
 
-MODEL_DIR = "./models/nli"
+load_dotenv()
+
+MODEL_DIR = os.getenv("NLI_MODEL_DIR")
 
 def get_nli_model():
     if not os.path.exists(MODEL_DIR):
