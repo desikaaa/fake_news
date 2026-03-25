@@ -4,20 +4,20 @@ from flask import Blueprint, jsonify
 from controllers.scraper_controller import run_scraper_pipeline
 search_bp = Blueprint("search", __name__)
 
-def init_search_routes(collection, model):
+def init_search_routes(collection, transformer, nli):
     @search_bp.route("/search", methods=["POST"])
     def search():
-        return search_controller(collection, model)
+        return search_controller(collection, transformer, nli)
 
     return search_bp
 
-def init_scrape_routes(collection, model):
+def init_scrape_routes(collection, transformer):
     scrape_bp = Blueprint("scrape", __name__)
 
     @scrape_bp.route("/scrape", methods=["POST"])
     def scrape():
         try:
-            run_scraper_pipeline(model, collection, batch_size=32)
+            run_scraper_pipeline(transformer, collection, batch_size=32)
 
             return jsonify({
                 "status": "success",
