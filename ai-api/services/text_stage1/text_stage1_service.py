@@ -3,23 +3,21 @@ from services.nli_service import run_nli
 from services.db_service import get_row_by_id
 from collections import Counter
 
-def run_stage1_kb_check(collection, transformer, nli, query, top_k=5, gap_threshold=0.45):
+def run_stage1_kb_check(collection, transformer, nli, query, top_k=1, gap_threshold=0.45):
 
     results = search_from_text(collection, transformer, query, top_k=top_k)
-
+    
     if not results:
         return {
             "top_k": top_k,
             "data": []
         }
 
-    first_score = results[0]["score"]
-
     filtered = [
         r for r in results
         if r["score"] <= gap_threshold
     ]
-
+    print("FILTERED:", filtered)
     if not filtered:
         return {
             "top_k": top_k,
@@ -27,10 +25,10 @@ def run_stage1_kb_check(collection, transformer, nli, query, top_k=5, gap_thresh
         }
 
     candidate_rows = [get_row_by_id(r["id"]) for r in filtered]
-
     pairs = [(query, row.get("judul", "")) for row in candidate_rows]
-
+    print("PAIRS UNTUK NLI:", pairs)
     nli_scores = run_nli(nli, pairs)
+    print("NLI SCORES:", nli_scores)
     labels = [r["label"] for r in nli_scores]
 
     label_count = Counter(labels)
@@ -44,6 +42,7 @@ def run_stage1_kb_check(collection, transformer, nli, query, top_k=5, gap_thresh
         nli_scores = run_nli(nli, pairs)
         label_count = Counter([r["label"] for r in nli_scores])
         majority_label = label_count.most_common(1)[0][0]
+        print("MAJORITY LABEL FAKTA:", majority_label)
         if majority_label == "entailment":
             label = 0
         elif majority_label == "contradiction":
@@ -52,12 +51,14 @@ def run_stage1_kb_check(collection, transformer, nli, query, top_k=5, gap_thresh
             return {
             "top_k": top_k,
             "status": "fail",
+            "pairs" : pairs,
             "query": query
         }
     else:
         return {
             "top_k": top_k,
             "status": "fail",
+            "pairs" : pairs,
             "query": query
         }
         

@@ -1,11 +1,10 @@
-from flask import request, jsonify
+
 from services.text_pipeline_service import process_fake_news_pipeline
 
-def detect_text_fake_news_controller(collection, transformer, nli,client):
-    data = request.get_json()
+def detect_text_fake_news_controller(collection, transformer, nli,client,data):
 
     if not data or "query" not in data:
-        return jsonify({"error": "Query tidak ditemukan"}), 400
+        return {"error": "Query tidak ditemukan"}
 
     query = data["query"]
 
@@ -16,4 +15,4 @@ def detect_text_fake_news_controller(collection, transformer, nli,client):
         nli=nli,
         client=client
     )
-    return jsonify(result)
+    return result
