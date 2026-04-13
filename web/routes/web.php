@@ -1,21 +1,22 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// 1. TAMBAHIN INI DI ATAS:
 use App\Http\Controllers\WhatsAppController; 
-
-// ... (route lain yang mungkin udah ada)
+use App\Http\Controllers\WaController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-// 2. MASUKIN ROUTE LU DI DALAM GRUP AUTH INI:
+// Route untuk Webhook dari WhatsApp (Di luar middleware auth karena diakses oleh sistem/API)
+Route::any('/wa-webhook', [WhatsAppController::class, 'webhook']);
+
+// Route khusus untuk user yang sudah login di Web
 Route::middleware(['auth'])->group(function () {
     
-    // ... (mungkin ada route dashboard lu di sini)
+    // ... (taruh route dashboard lu di sini nanti kalau ada)
     
-    // Ini dia route baru lu mek:
+    // Route buat nyambungin WA
     Route::post('/link-wa', [WhatsAppController::class, 'linkWhatsApp'])->name('wa.link');
 
 });
