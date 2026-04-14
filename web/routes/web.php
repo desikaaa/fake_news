@@ -10,14 +10,19 @@ Route::get('/', function () {
     return view('landing_page.landing');
 });
 
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
+// 🔥 GROUP ADMIN
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 
-// RIWAYAT
-Route::get('/admin/riwayat', [RiwayatController::class, 'index']);
-Route::get('/admin/riwayat/edit/{id}', [RiwayatController::class, 'edit']);
-Route::post('/admin/riwayat/update/{id}', [RiwayatController::class, 'update']);
-Route::get('/admin/riwayat/delete/{id}', [RiwayatController::class, 'delete']);
-// Route untuk Webhook dari WhatsApp (Di luar middleware auth karena diakses oleh sistem/API)
+    // DASHBOARD
+    Route::get('/dashboard', [AdminController::class, 'dashboard']);
+
+    // RIWAYAT
+    Route::get('/riwayat', [RiwayatController::class, 'index']);
+    Route::get('/riwayat/edit/{id}', [RiwayatController::class, 'edit']);
+    Route::post('/riwayat/update/{id}', [RiwayatController::class, 'update']);
+    Route::get('/riwayat/delete/{id}', [RiwayatController::class, 'delete']);
+});
+
 Route::any('/wa-webhook', [WaController::class, 'webhook']);
 
 // Route khusus untuk user yang sudah login di Web
