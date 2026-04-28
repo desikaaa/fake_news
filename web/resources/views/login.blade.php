@@ -36,7 +36,7 @@
             </a>
 
             {{-- WhatsApp button --}}
-            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="lh-nav-btn" aria-label="WhatsApp" title="WhatsApp">
+            <a href="{{ route('whatsapp.page') }}" class="lh-nav-btn" aria-label="WhatsApp" title="WhatsApp">
                 <iconify-icon icon="garden:whatsapp-fill-16" width="24" height="24"></iconify-icon>
                 <span class="lh-nav-tooltip" role="tooltip">
                     <iconify-icon icon="garden:whatsapp-fill-16" width="18" height="18"></iconify-icon>
@@ -78,7 +78,7 @@
                     </a>
 
                     {{-- WhatsApp Login --}}
-                    <a href="#" class="btn-social btn-social--whatsapp" aria-disabled="true">
+                    <a href="{{ route('login.wa.verify') }}" class="btn-social btn-social--whatsapp">
                         <span class="btn-social__icon">
                             {{-- WhatsApp SVG --}}
                             <svg width="30" height="30" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">

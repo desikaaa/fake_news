@@ -9,6 +9,7 @@ use App\Http\Controllers\UmpanBalikController;
 use App\Http\Controllers\WaController;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return view('landing_page.landing');
@@ -26,8 +27,10 @@ Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('das
     Route::get('/pencarian', [PencarianController::class, 'index'])->name('beranda');
     Route::post('/telusuri', [PencarianController::class, 'telusuri'])->name('telusuri');
     Route::post('/telusuri-gambar', [PencarianController::class, 'telusuriGambar'])->name('telusuri.gambar');
+
+//Halaman Whatsapp
     Route::get('/dapatkan-whatsapp', function () {
-        return view('whatsapp');
+        return view('user.whatsapp');
     })->name('whatsapp.page');
 
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard']);
@@ -60,13 +63,16 @@ Route::post('/detect-hoax', [ApiController::class, 'detectHoax']);
 //login menggunakan wa di web
 Route::get('/login-wa', [AuthController::class, 'showPhoneForm']);
 Route::post('/login-wa/request', [AuthController::class, 'requestToken']);
-Route::get('/login-wa/verify', [AuthController::class, 'showTokenForm']);
+Route::get('/login-wa/verify', [AuthController::class, 'showTokenForm'])->name('login.wa.verify');
 Route::post('/login-wa/verify', [AuthController::class, 'verifyToken']);
 
 
 
 // Route khusus untuk user yang sudah login di Web
 Route::middleware(['auth'])->group(function () {
+
+    // Profile update
+    Route::post('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
 
     // ... (taruh route dashboard lu di sini nanti kalau ada)
 
