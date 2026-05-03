@@ -1,52 +1,20 @@
-# from config.chroma_config import get_chroma_collection
+import joblib
+import numpy as np
 
-# collection = get_chroma_collection()
-# import os
-
-# BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-
-# IMG_DIR = os.path.abspath(os.path.join(BASE_DIR, "..", "..", "prediction_images"))
-# print("IMG_DIR:", IMG_DIR)
-# print("Base directory:", BASE_DIR)
-# print("Total data di Chroma:", collection.count())
-# print(collection.metadata)
-
-import requests
-
-def cari_link(judul):
-    try:
-        res = requests.get(
-            "http://localhost:8080/search",
-            params={
-                "q": judul,
-                "language": "id",
-                "safesearch": 1,
-                "categories": "news",
-                "format": "json"
-            },
-            timeout=10,
-            headers={
-                "User-Agent": "Mozilla/5.0"
-            }
-        )
-
-        data = res.json()
-        results = data.get("results", [])
-
-        if not results:
-            return None
-
-        # ambil link pertama saja
-        first = results[0]
-        return first.get("url")
-
-    except Exception as e:
-        print(f"Error cari_link: {e}")
-        return None
+# load model
+model = joblib.load("./models/rf_model.pkl")
 
 
-link = cari_link(
-    "1 Pria Penikam Nus Kei hingga Tewas Ternyata Atlet MMA"
-)
+# susun fitur (HARUS urut sesuai training)
+X = [[
+        0.6967,	0.0513,	0.043902,	0.856553,	0.059734
+]]
 
-print("Link yang ditemukan:", link)
+# prediksi
+pred = model.predict(X)
+proba = model.predict_proba(X)
+
+print("Prediction:", pred[0])
+print("Confidence:", max(proba[0]))
+print(proba)
+print(model.classes_)
