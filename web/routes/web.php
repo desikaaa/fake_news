@@ -38,7 +38,8 @@ Route::get('/dapatkan-whatsapp', function () {
 Route::get('/uji-coba-deteksi', function () {
     return view('uji-coba-deteksi');
 });
-Route::post('/api/detect-text', [HoaxDetectionController::class, 'detectText']);
+Route::post('/api/detect-text', [HoaxDetectionController::class, 'detectText'])
+    ->name('detect.text');
 
 
 /*
